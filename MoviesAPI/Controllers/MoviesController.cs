@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,11 +53,18 @@ namespace MoviesAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put (int id, [FromBody] Movie movie)
         {
-            var changeMovie = _context.Movies.Find(id);
+            var changeMovie = _context.Movies.Where(m => m.Id == id).FirstOrDefault();
             changeMovie = movie;
-            _context.Movies.Update(changeMovie);
-            _context.SaveChanges();
-            return Ok();
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _context.Movies.Update(changeMovie);
+                _context.SaveChanges();
+                return Ok();
+            }
         }
 
         // DELETE: api/Movies/5
